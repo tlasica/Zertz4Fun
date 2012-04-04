@@ -1,8 +1,6 @@
-from gamelogic.board import FieldState
-
 __author__ = 'tomek'
 
-class PlaceBall:
+class Placement:
     def __self(self, ballColor, placeCoord, removeCoord):
         self.ball = ballColor
         self.placeCoord = placeCoord
@@ -11,19 +9,19 @@ class PlaceBall:
     def validate(self, game):
         # target field is empty
         board = game.getBoard()
-        if board.getState(self.placeCoord) != FieldState.EMPTY:
+        if not board.isEmpty(self.placeCoord):
             return False, "target field %s is not EMPTY" % self.placeCoord
             # there is enough balls in left or player balls
         gameBalls = game.getRemainingBalls()
-        if not gameBalls.get(self.ball):
-            if not game.getCurrentPlayerBalls().get(self.ball):
-                return False, "not enough balls of %s" % self.ball
+        if not gameBalls.get(self.ball) and not game.getCurrentPlayerBalls().get(self.ball):
+            return False, "not enough balls of %s" % self.ball
         if self.removeCoord:
             # removed field is empty
-            if board.getState(self.removeCoord) != FieldState.EMPTY:
-                return False, "removed field %s is not empty" % self.removeCoord
+            if not board.isEmpty(self.removeCoord):
+                return False, "field %s cannot be removed - it is not empty" % self.removeCoord
                 # removed field is free (can be isolated)
-                #TODO: implement this check with another class
+            if not board.canBeIsolated(self.removeCoord):
+                return False, "field %s cannot be removed - it is not free" % self.removeCoord
         return True, "move is valid"
 
     def execute(self, game):
@@ -50,9 +48,9 @@ class PlaceBall:
         pass
 
 
-class CaptureBalls:
+class Capture:
     pass
 
 
-class IsolateBalls:
+class Isolation:
     pass
