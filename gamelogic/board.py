@@ -42,12 +42,19 @@ class Board:
         self.board[coord] = FieldState.REMOVED
         return res
 
-    def moveBall(self, fromCoord, toCoord):
+    #TODO: unit testing
+    def captureOneBall(self, fromCoord, toCoord):
         assert self.board[toCoord] == FieldState.EMPTY
         assert self.board[fromCoord] <> FieldState.EMPTY
         assert self.board[fromCoord] <> FieldState.REMOVED
         self.board[toCoord] = self.board[fromCoord]
         self.board[fromCoord] = FieldState.EMPTY
+        capturedCoord = CaptureHelper.getCapturedCoord(fromCoord, toCoord)
+        capturedBall = self.getState(capturedCoord)
+        assert capturedBall <> FieldState.EMPTY
+        assert capturedBall <> FieldState.REMOVED
+        self.board[capturedCoord] = FieldState.EMPTY
+        return capturedCoord, capturedBall
 
     def getState(self, coord):
         return self.board[coord]
@@ -58,8 +65,12 @@ class Board:
     def isEmpty(self, coord):
         return self.getState(coord) == FieldState.EMPTY
 
+    def isBall(self, coord):
+        state = self.getState(coord)
+        return state==FieldState.WHITE or state==FieldState.GRAY or state==FieldState.BLACK
+
     def canBeIsolated(self, coord):
-        helper = IsolatingHelper.getHelper()
+        helper = IsolatingHelper()
         if helper.canAlwaysRemove(coord):
             return True
         else:
@@ -93,12 +104,8 @@ class Board:
 #e.g. for B4 a surrounding ring is [a4,b5,c4,c3,b3,a3]
 
 #TODO maybe it should not be a singleton or implementation is different
+#TODO http://code.activestate.com/recipes/52558-the-singleton-pattern-implemented-with-python/
 class IsolatingHelper:
-    INSTANCE = IsolatingHelper()
-
-    @staticmethod
-    def getHelper():
-        return IsolatingHelper.INSTANCE
 
     def __init__(self):
         self.outerRing = {"a1", "a2", "a3", "a4"}
@@ -127,3 +134,18 @@ class IsolatingHelper:
         ring = ["%s%d" % (row, num + 1), "%s%d" % (nextRow, num), "%s%d" % (nextRow, num - 1), "%s%d" % (row, num - 1),
                 "%s%d" % (prevRow, num - 1), "%s%d" % (prevRow, num)]
         return ring
+
+
+class CaptureHelper:
+
+    @staticmethod
+    def getCapturedCoord(fromCoord, toCoord):
+        if fromCoord[0] == toCoord[0]:
+            idx = (int(fromCoord[1]) + int(toCoord[1])) / 2
+            return "%s%d" % (fromCoord[0], idx)
+        elif fromCoord[1] == toCoord[1]:
+            row =chr( (ord(fromCoord[0]) + ord(toCoord[0])) / 2 )
+            return row + fromCoord[1]
+        else:
+            assert False    # TODO: runtime error ?
+

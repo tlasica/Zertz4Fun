@@ -44,7 +44,7 @@ class MoveTest(unittest.TestCase):
         board = game.getBoard()
         self.assertEquals(FieldState.EMPTY, board.getState("a1"))
         self.assertEquals(FieldState.EMPTY, board.getState("b2"))
-        m1 = Placement(BallColors.BLACK, "a1", "a2")
+        m1 = Placement(BallColors.BLACK, "a1", "b2")
         self.assertFalse(m1.validate(game)[0])
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 from gamelogic.balls import BallColors
-from gamelogic.board import FieldState, Board, BoardSize, IsolatingHelper
+from gamelogic.board import FieldState, Board, BoardSize, IsolatingHelper, CaptureHelper
 
 __author__ = 'tomek'
 
@@ -25,9 +25,9 @@ class BoardTest(unittest.TestCase):
         self.assertEquals(FieldState.BLACK, b.getState("a1"))
         self.assertEquals(FieldState.REMOVED, b.getState("a2"))
         self.assertEquals(FieldState.EMPTY, x)
-        b.moveBall("a1", "c3")
+        b.captureOneBall("a1", "c1")
         self.assertEquals(FieldState.EMPTY, b.getState("a1"))
-        self.assertEquals(FieldState.BLACK, b.getState("c3"))
+        self.assertEquals(FieldState.BLACK, b.getState("c1"))
         self.assertEquals(FieldState.EMPTY, b.getState("b2"))    # no side effect
         self.assertEquals(FieldState.REMOVED, b.getState("a2"))    # no side effect
 
@@ -56,6 +56,12 @@ class IsolatingHeperTest(unittest.TestCase):
         iso = IsolatingHelper()
         surr = iso.getNeighbours("b2")
         self.assertEquals(surr, ["b3", "c2", "c1", "b1", "a1", "a2"])
+
+    def test_CaptureHelper(self):
+        self.assertEquals( CaptureHelper.getCapturedCoord("a1","a3"), "a2")
+        self.assertEquals( CaptureHelper.getCapturedCoord("b5","b3"), "b4")
+        self.assertEquals( CaptureHelper.getCapturedCoord("c3","e3"), "d3")
+        self.assertEquals( CaptureHelper.getCapturedCoord("c3","a3"), "b3")
 
 if __name__ == '__main__':
     unittest.main()
