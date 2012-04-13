@@ -70,7 +70,7 @@ class Board:
         return state==FieldState.WHITE or state==FieldState.GRAY or state==FieldState.BLACK
 
     def canBeIsolated(self, coord):
-        helper = IsolatingHelper()
+        helper = IsolatingHelper.create()
         if helper.canAlwaysRemove(coord):
             return True
         else:
@@ -81,6 +81,27 @@ class Board:
                 if self.isRemoved(n1) and self.isRemoved(n2):
                     return True
             return False
+
+    def willCreateIslandAfterRemoval(self, coord):
+        """
+        Checks whether the field after removal will create an isolated island
+        """
+        helper = IsolatingHelper.create()
+        if helper.canAlwaysRemove(coord):
+            return False
+        neighbours = helper.getNeighbours(coord)
+        numRemovedSequences = 0
+        lastIsRemoved = self.isRemoved(neighbours[0])
+        for n in neighbours[1:]:
+            nIsRemoved = self.isRemoved(n)
+            if nIsRemoved <> lastIsRemoved:
+                if lastIsRemoved:
+                    numRemovedSequences += 1
+                lastIsRemoved = nIsRemoved
+        if lastIsRemoved <> self.isRemoved(neighbours[0]):
+            numRemovedSequences += 1
+        return numRemovedSequences >= 2
+
 
     @classmethod
     def createEmptyBoard37(cls):
@@ -106,6 +127,14 @@ class Board:
 #TODO maybe it should not be a singleton or implementation is different
 #TODO http://code.activestate.com/recipes/52558-the-singleton-pattern-implemented-with-python/
 class IsolatingHelper:
+
+    _instance = None
+
+    @classmethod
+    def create(cls):
+        if not IsolatingHelper._instance:
+            IsolatingHelper._instance = IsolatingHelper()
+        return IsolatingHelper._instance
 
     def __init__(self):
         self.outerRing = {"a1", "a2", "a3", "a4"}

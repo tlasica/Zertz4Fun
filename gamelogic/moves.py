@@ -107,7 +107,7 @@ class Capture:
         for toCoord in self.coordList[1:]:
             capture = board.captureOneBall(fromCoord, toCoord)
             capturedBalls.append( capture )
-            game.getCurrentPlayerBalls().add(capture[1])
+            game.getCurrentPlayerBalls().add(capture[1], 1)
             fromCoord = toCoord # next part of move
         return capturedBalls
 

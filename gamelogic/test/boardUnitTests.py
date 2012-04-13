@@ -20,6 +20,7 @@ class BoardTest(unittest.TestCase):
     def test_simpleActions(self):
         b = Board.createEmptyBoard37()
         b.putBall("a1", BallColors.BLACK)
+        b.putBall("b1", BallColors.BLACK)
         self.assertEquals(FieldState.BLACK, b.getState("a1"))
         x = b.removePiece("a2")
         self.assertEquals(FieldState.BLACK, b.getState("a1"))
