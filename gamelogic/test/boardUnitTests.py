@@ -40,6 +40,20 @@ class BoardSizeTest(unittest.TestCase):
         self.assertEquals(6, BoardSize.rowSize("e"))
 
 
+class CaptureHelperTest(unittest.TestCase):
+    def test_getCapturedCoord(self):
+        self.assertEquals("a2", CaptureHelper.getCapturedCoord("a1", "a3"))
+        self.assertEquals("a2", CaptureHelper.getCapturedCoord("a3", "a1"))
+        self.assertEquals("b1", CaptureHelper.getCapturedCoord("a1", "c1"))
+        self.assertEquals("b1", CaptureHelper.getCapturedCoord("c1", "a1"))
+        self.assertEquals("b5", CaptureHelper.getCapturedCoord("a4", "c6"))
+        self.assertEquals("b5", CaptureHelper.getCapturedCoord("c6", "a4"))
+        self.assertEquals("d2", CaptureHelper.getCapturedCoord("c1", "e2"))
+        self.assertEquals("d2", CaptureHelper.getCapturedCoord("e2", "c1"))
+        self.assertIsNone(CaptureHelper.getCapturedCoord("a1", "a4"))
+        self.assertIsNone(CaptureHelper.getCapturedCoord("c2", "e6"))
+
+
 class IsolatingHeperTest(unittest.TestCase):
     def test_outerRing(self):
         iso = IsolatingHelper()
@@ -59,10 +73,10 @@ class IsolatingHeperTest(unittest.TestCase):
         self.assertEquals(surr, ["b3", "c2", "c1", "b1", "a1", "a2"])
 
     def test_CaptureHelper(self):
-        self.assertEquals( CaptureHelper.getCapturedCoord("a1","a3"), "a2")
-        self.assertEquals( CaptureHelper.getCapturedCoord("b5","b3"), "b4")
-        self.assertEquals( CaptureHelper.getCapturedCoord("c3","e3"), "d3")
-        self.assertEquals( CaptureHelper.getCapturedCoord("c3","a3"), "b3")
+        self.assertEquals(CaptureHelper.getCapturedCoord("a1", "a3"), "a2")
+        self.assertEquals(CaptureHelper.getCapturedCoord("b5", "b3"), "b4")
+        self.assertEquals(CaptureHelper.getCapturedCoord("c3", "e3"), "d3")
+        self.assertEquals(CaptureHelper.getCapturedCoord("c3", "a3"), "b3")
 
 if __name__ == '__main__':
     unittest.main()

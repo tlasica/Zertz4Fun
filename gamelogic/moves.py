@@ -74,7 +74,6 @@ class Placement:
 
 
 class Capture:
-
     def __init__(self, coordList):
         self.coordList = coordList
         assert len(coordList) >= 2
@@ -85,31 +84,36 @@ class Capture:
         startCoord = self.coordList[0]
         if not board.isBall(startCoord):
             return False, "%s should be occupied with a ball" % startCoord
-        # each next should be empty and there should be a ball captured
+            # each next should be empty and there should be a ball captured
         fromCoord = self.coordList[0]
         for toCoord in self.coordList[1:]:
             captureCoord = CaptureHelper.getCapturedCoord(fromCoord, toCoord)
+            if not captureCoord:
+                return False, "not possible to strike from %s to %s" % (fromCoord, toCoord)
             if not board.isEmpty(toCoord):
                 return False, "%s should be empty" % toCoord
             if not board.isBall(captureCoord):
                 return False, "%s should be occupied" % captureCoord
-            # next
+                # next
             fromCoord = toCoord
         return True, "move is valid"
 
     def execute(self, game):
         """
         executes move of capturing (strikes) including changing currentPly ball set
+        returns set of captured balls
         """
         capturedBalls = []
         board = game.getBoard()
         fromCoord = self.coordList[0]
         for toCoord in self.coordList[1:]:
             capture = board.captureOneBall(fromCoord, toCoord)
-            capturedBalls.append( capture )
+            assert capture
+            capturedBalls.append(capture)
             game.getCurrentPlayerBalls().add(capture[1], 1)
             fromCoord = toCoord # next part of move
         return capturedBalls
+
 
 class StringToMoveConverter:
     """

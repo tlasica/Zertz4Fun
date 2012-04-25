@@ -1,4 +1,5 @@
 from gamelogic.balls import BallColors
+import math
 
 __author__ = 'tlasica'
 
@@ -67,7 +68,7 @@ class Board:
 
     def isBall(self, coord):
         state = self.getState(coord)
-        return state==FieldState.WHITE or state==FieldState.GRAY or state==FieldState.BLACK
+        return state == FieldState.WHITE or state == FieldState.GRAY or state == FieldState.BLACK
 
     def canBeIsolated(self, coord):
         helper = IsolatingHelper.create()
@@ -127,7 +128,6 @@ class Board:
 #TODO maybe it should not be a singleton or implementation is different
 #TODO http://code.activestate.com/recipes/52558-the-singleton-pattern-implemented-with-python/
 class IsolatingHelper:
-
     _instance = None
 
     @classmethod
@@ -166,15 +166,29 @@ class IsolatingHelper:
 
 
 class CaptureHelper:
-
     @staticmethod
     def getCapturedCoord(fromCoord, toCoord):
         if fromCoord[0] == toCoord[0]:
-            idx = (int(fromCoord[1]) + int(toCoord[1])) / 2
-            return "%s%d" % (fromCoord[0], idx)
+            fromIdx = int(fromCoord[1])
+            toIdx = int(toCoord[1])
+            if math.fabs(toIdx - fromIdx) == 2:
+                idx = (fromIdx + toIdx) / 2
+                return "%s%d" % (fromCoord[0], idx)
+            else:
+                return None
         elif fromCoord[1] == toCoord[1]:
-            row =chr( (ord(fromCoord[0]) + ord(toCoord[0])) / 2 )
-            return row + fromCoord[1]
+            fromRow = ord(fromCoord[0])
+            toRow = ord(toCoord[0])
+            if math.fabs(toRow - fromRow) == 2:
+                row = chr((fromRow + toRow) / 2)
+                return row + fromCoord[1]
+            else:
+                return None
         else:
-            assert False    # TODO: runtime error ?
+            row = chr((ord(fromCoord[0]) + ord(toCoord[0])) / 2)
+            idx = int(math.ceil(float(int(fromCoord[1]) + int(toCoord[1])) / 2))
+            if math.fabs(idx - int(fromCoord[1])) <= 1:
+                return "%s%d" % (row, idx)
+            else:
+                return None
 
