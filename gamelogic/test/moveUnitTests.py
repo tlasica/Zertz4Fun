@@ -7,7 +7,7 @@ __author__ = 'tomek'
 
 import unittest
 
-class MoveTest(unittest.TestCase):
+class PlacementTest(unittest.TestCase):
     def test_simplePlacementWithRemoval(self):
         game = Game()
         board = game.getBoard()
@@ -47,6 +47,15 @@ class MoveTest(unittest.TestCase):
         m1 = Placement(BallColors.BLACK, "a1", "b2")
         self.assertFalse(m1.validate(game)[0])
 
+    def test_fromString(self):
+        m = Placement.fromString("Wd1")
+        m = Placement.fromString("Wd1,e2")
+        self.assertIsNone(Placement.fromString("dupa"))
+        self.assertIsNone(Placement.fromString("W"))
+        self.assertIsNone(Placement.fromString("Wa1,"))
+
+
+class CaptureTest(unittest.TestCase):
     def test_SingleCapture(self):
         game = Game()
         m1 = Placement(BallColors.BLACK, "a1", "a2")

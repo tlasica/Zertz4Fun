@@ -1,0 +1,19 @@
+STAGE 1: Running Game Logic
+
+logic       Placement w/o isolation                             done
+logic       Single Capture
+logic       Multi Capture
+logic       Placement with isolation
+logic       Create Placement from string
+logic       Create Capture from string
+
+
+STAGE 2: Simple play in the console
+
+ai          Stupid Agent
+control     Game played by 2 stupid Agents
+control     Game should gather game history
+control     Printing game
+control     Printing history
+control     Game played by agent and human
+

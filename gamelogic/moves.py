@@ -72,6 +72,18 @@ class Placement:
             return '%s%s,%s' % (self.ball, self.placeCoord, self.removeCoord)
         pass
 
+    @classmethod
+    def fromString(cls, str):
+        ball = str[0]
+        placeCoord = str[1:2]
+        if len(str) == 3:
+            return Placement(ball, placeCoord, None)
+        elif len(str) == 5:
+            removeCoord = str[4:5]
+            return Placement(ball, placeCoord, removeCoord)
+        else:
+            return None
+
 
 class Capture:
     def __init__(self, coordList):
